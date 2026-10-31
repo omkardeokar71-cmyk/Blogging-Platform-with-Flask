@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Create an account · The Sunday Edit{% endblock %}
+{% block content %}
+  <section class="auth-layout">
+    <div class="auth-note">
+      <p class="eyebrow">Your words belong here</p>
+      <h1>Make a little space for your <em>ideas.</em></h1>
+      <p>Join readers and writers sharing the stories that make ordinary days a little more interesting.</p>
+      <div class="note-ornament" aria-hidden="true">“</div>
+    </div>
+    <div class="form-panel">
+      <p class="eyebrow">Start your story</p>
+      <h2>Create your account</h2>
+      <p class="form-intro">It only takes a moment to get started.</p>
+      <form class="stacked-form" action="{{ url_for('main.create_account') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="username">Username</label>
+        <input id="username" name="username" value="{{ username|default('') }}" autocomplete="username" minlength="3" maxlength="40" pattern="[A-Za-z0-9_]+" required>
+        <small class="field-help">3–40 letters, numbers, or underscores.</small>
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" value="{{ email|default('') }}" autocomplete="email" maxlength="254" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+        <button class="button button-wide" type="submit">Create account <span aria-hidden="true">↗</span></button>
+      </form>
+      <p class="form-switch">Already have an account? <a href="{{ url_for('main.login') }}">Sign in</a></p>
+    </div>
+  </section>
+{% endblock %}

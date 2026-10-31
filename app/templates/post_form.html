@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }} · The Sunday Edit{% endblock %}
+{% block content %}
+  <section class="editor-wrap">
+    <a class="back-link" href="{{ url_for('main.dashboard') }}">← Back to my stories</a>
+    <div class="editor-heading">
+      <p class="eyebrow">Put it into words</p>
+      <h1>{{ heading }}</h1>
+      <p>A good story doesn’t need to be perfect. It just needs to be yours.</p>
+    </div>
+    <form class="editor-form" action="{{ url_for('main.update_post', post_id=post.id) if post else url_for('main.create_post') }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label for="title">Story title</label>
+      <input class="title-input" id="title" name="title" value="{{ post.title if post else title|default('') }}" maxlength="200" placeholder="Give your story a name..." required>
+      <div class="editor-row">
+        <label for="category">Topic
+          <select id="category" name="category">
+            {% for category in categories %}
+              <option value="{{ category }}" {% if (post.category if post else selected_category|default('General')) == category %}selected{% endif %}>{{ category }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <span class="field-help">Choose the topic that fits best.</span>
+      </div>
+      <label for="content">Your story</label>
+      <textarea id="content" name="content" rows="16" maxlength="20000" placeholder="Start wherever the story begins..." required>{{ post.content if post else content|default('') }}</textarea>
+      <div class="editor-actions">
+        <span class="field-help">Up to 20,000 characters. Your formatting and line breaks will be kept.</span>
+        <button class="button" type="submit">{{ "Save changes" if post else "Publish story" }} <span aria-hidden="true">↗</span></button>
+      </div>
+    </form>
+  </section>
+{% endblock %}

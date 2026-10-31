@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Sign in · The Sunday Edit{% endblock %}
+{% block content %}
+  <section class="auth-layout">
+    <div class="auth-note">
+      <p class="eyebrow">Good to have you back</p>
+      <h1>Your reading nook is <em>waiting.</em></h1>
+      <p>Pick up where you left off, or start working on the next story you’ve been meaning to tell.</p>
+      <div class="note-ornament" aria-hidden="true">“</div>
+    </div>
+    <div class="form-panel">
+      <p class="eyebrow">Welcome back</p>
+      <h2>Sign in to your account</h2>
+      <p class="form-intro">Your stories and drafts are right where you left them.</p>
+      <form class="stacked-form" action="{{ url_for('main.sign_in') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="identity">Username or email</label>
+        <input id="identity" name="identity" value="{{ identity|default('') }}" autocomplete="username" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button class="button button-wide" type="submit">Sign in <span aria-hidden="true">↗</span></button>
+      </form>
+      <p class="form-switch">New around here? <a href="{{ url_for('main.register') }}">Create an account</a></p>
+    </div>
+  </section>
+{% endblock %}

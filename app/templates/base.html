@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f6f2">
+    <meta name="description" content="{% block description %}A thoughtful space to read and share stories.{% endblock %}">
+    <title>{% block title %}The Sunday Edit{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="{{ url_for('main.index') }}">
+        <span class="brand-mark">S</span>
+        <span>The Sunday Edit<small>Stories worth slowing down for</small></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="{{ url_for('main.index') }}">Discover</a>
+        {% if current_user %}
+          <a href="{{ url_for('main.dashboard') }}">My stories</a>
+          <a class="button button-small" href="{{ url_for('main.new_post') }}">Write a story</a>
+          <form class="nav-form" action="{{ url_for('main.sign_out') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="nav-link" type="submit">Sign out</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('main.login') }}">Sign in</a>
+          <a class="button button-small" href="{{ url_for('main.register') }}">Join the community</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <main>
+      <div class="flash-stack" aria-live="polite">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+          <p class="flash flash-{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <a class="footer-brand" href="{{ url_for('main.index') }}">The Sunday Edit</a>
+      <span>A little room for your next big idea.</span>
+    </footer>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

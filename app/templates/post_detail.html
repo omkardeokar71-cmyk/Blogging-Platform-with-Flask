@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} · The Sunday Edit{% endblock %}
+{% block content %}
+  <article class="article-page">
+    <a class="back-link" href="{{ url_for('main.index') }}">← Back to stories</a>
+    <header class="article-header">
+      <span class="category-pill">{{ post.category }}</span>
+      <h1>{{ post.title }}</h1>
+      <div class="article-byline">
+        <span class="avatar avatar-large">{{ (post.author.username if post.author else "S")[0]|upper }}</span>
+        <span>
+          <strong>{{ post.author.username if post.author else "Sunday Edit archive" }}</strong>
+          <small>Published {{ post.created_at.strftime("%B %d, %Y") }}</small>
+        </span>
+      </div>
+      {% if current_user and post.author_id == current_user.id %}
+        <div class="article-owner-actions">
+          <a class="button button-outline button-small" href="{{ url_for('main.edit_post', post_id=post.id) }}">Edit story</a>
+          <form action="{{ url_for('main.delete_post', post_id=post.id) }}" method="post" onsubmit="return confirm('Delete this story? This cannot be undone.');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="button button-danger button-small" type="submit">Delete</button>
+          </form>
+        </div>
+      {% endif %}
+    </header>
+    <div class="article-body">{{ post.content }}</div>
+    <div class="article-end"><span aria-hidden="true">✳</span><p>Thanks for spending a little time with this story.</p></div>
+  </article>
+{% endblock %}

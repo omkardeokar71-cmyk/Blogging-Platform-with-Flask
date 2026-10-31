@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ status_code }} · The Sunday Edit{% endblock %}
+{% block content %}
+  <section class="empty-state error-state">
+    <span class="eyebrow">A small detour · {{ status_code }}</span>
+    <span class="empty-mark" aria-hidden="true">✳</span>
+    <h1>{{ title }}</h1>
+    <p>{{ message }}</p>
+    <a class="button" href="{{ url_for('main.index') }}">Back to the stories <span aria-hidden="true">↗</span></a>
+  </section>
+{% endblock %}

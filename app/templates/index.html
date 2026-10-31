@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Discover stories · The Sunday Edit{% endblock %}
+{% block description %}Discover thoughtful stories shared by the Sunday Edit writing community.{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">A community of curious minds</p>
+      <h1>Good ideas deserve <em>good stories.</em></h1>
+      <p class="hero-intro">A thoughtful corner of the internet for the things you’ve learned, loved, and can’t wait to share.</p>
+      {% if current_user %}
+        <a class="button" href="{{ url_for('main.new_post') }}">Share your story <span aria-hidden="true">↗</span></a>
+      {% else %}
+        <a class="button" href="{{ url_for('main.register') }}">Find your voice <span aria-hidden="true">↗</span></a>
+      {% endif %}
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="sun"></div>
+      <div class="art-caption">WORDS<br>THAT STAY</div>
+      <div class="art-leaf leaf-one"></div>
+      <div class="art-leaf leaf-two"></div>
+      <div class="art-leaf leaf-three"></div>
+    </div>
+  </section>
+
+  <section class="stories-section" aria-labelledby="stories-heading">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Fresh from the community</p>
+        <h2 id="stories-heading">Stories to settle into</h2>
+      </div>
+      <span class="story-count">{{ posts|length }} {{ "story" if posts|length == 1 else "stories" }}</span>
+    </div>
+
+    <form class="discovery-tools" action="{{ url_for('main.index') }}" method="get">
+      <label class="search-field">
+        <span class="sr-only">Search stories</span>
+        <input type="search" name="q" value="{{ search_query }}" placeholder="Search stories, ideas, people...">
+      </label>
+      <label class="category-field">
+        <span class="sr-only">Filter by category</span>
+        <select name="category">
+          <option value="">All topics</option>
+          {% for category in categories %}
+            <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="button button-small" type="submit">Explore</button>
+    </form>
+
+    {% if posts %}
+      <div class="story-grid">
+        {% for post in posts %}
+          <article class="story-card">
+            <a class="story-card-link" href="{{ url_for('main.post_detail', post_id=post.id) }}">
+              <span class="category-pill">{{ post.category }}</span>
+              <h3>{{ post.title }}</h3>
+              <p class="story-excerpt">{{ post.content|truncate(190) }}</p>
+              <span class="story-meta">
+                <span class="avatar">{{ (post.author.username if post.author else "S")[0]|upper }}</span>
+                <span>
+                  <strong>{{ post.author.username if post.author else "Sunday Edit archive" }}</strong>
+                  <small>{{ post.created_at.strftime("%b %d, %Y") }}</small>
+                </span>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </span>
+            </a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="empty-mark" aria-hidden="true">✳</span>
+        <h3>No stories found just yet.</h3>
+        <p>{% if search_query or selected_category %}Try another search or topic, or clear your filters.{% else %}Be the first to share something worth reading.{% endif %}</p>
+        {% if search_query or selected_category %}
+          <a class="text-link" href="{{ url_for('main.index') }}">Clear filters ↗</a>
+        {% elif current_user %}
+          <a class="text-link" href="{{ url_for('main.new_post') }}">Write the first story ↗</a>
+        {% else %}
+          <a class="text-link" href="{{ url_for('main.register') }}">Join and write the first story ↗</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}
